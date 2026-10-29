@@ -120,14 +120,12 @@
 
             // Patrón Regex para detectar posibles inyecciones SQL
             // Detecta operadores (OR, AND), comandos DML/DDL (SELECT, DROP) y caracteres de escape (', ", ;)
-            const patronSQLi = /(\b(UNION|SELECT|INSERT|UPDATE|DELETE|DROP|ALTER|OR|AND)\b)|(--|\#|\/\*|;|\'|\")/i;
+            const patronSQLi = /(\b(SELECT|INSERT|UPDATE|DELETE|DROP|ALTER|UNION|CREATE|EXEC|EXECUTE|GRANT|REVOKE)\b)|(\-\-|#|\/\*|\*\/|;)|((\bOR\b|\bAND\b)\s+\w+\s*=\s*\w+)|((\bOR\b|\bAND\b)\s+\d+\s*=\s*\d+)|('(?:\s*(?:OR|AND)\s+.*=.*)')/i;
 
             if (patronSQLi.test(input)) {
-                // Se detectó inyección
                 divResultado.textContent = "ERROR: Se detectó contenido malicioso (Inyección SQL). Petición bloqueada.";
                 divResultado.classList.add('error');
             } else {
-                // Contenido seguro
                 divResultado.textContent = "Sano: El contenido es seguro y puede procesarse.";
                 divResultado.classList.add('sano');
             }
