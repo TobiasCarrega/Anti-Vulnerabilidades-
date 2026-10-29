@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portal de Validación - Demo</title>
+    <style>
+        /* Estilos genéricos y corporativos */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f0f4f8;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .login-container {
+            background-color: #ffffff;
+            padding: 40px 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 350px;
+            text-align: center;
+        }
+        h2 {
+            color: #333;
+            margin-bottom: 10px;
+        }
+        p {
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 20px;
+        }
+        input[type="text"] {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+            font-size: 14px;
+        }
+        input[type="text"]:focus {
+            border-color: #0056b3;
+            outline: none;
+        }
+        button {
+            width: 100%;
+            padding: 12px;
+            background-color: #0056b3; /* Azul corporativo genérico */
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #004494;
+        }
+        .mensaje {
+            margin-top: 20px;
+            padding: 10px;
+            border-radius: 4px;
+            font-weight: bold;
+            display: none; /* Oculto por defecto */
+        }
+        /* Clases para los resultados */
+        .error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+            display: block;
+        }
+        .sano {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+            display: block;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="login-container">
+        <h2>Validación de Sistema</h2>
+        <p>Ingrese el parámetro a consultar en la base de datos:</p>
+        
+        <input type="text" id="campoEntrada" placeholder="Ej: juan@mail.com">
+        <button onclick="comprobarSeguridad()">Comprobar</button>
+
+        <div id="resultadoMensaje" class="mensaje"></div>
+    </div>
+
+    <script>
+        function comprobarSeguridad() {
+            const input = document.getElementById('campoEntrada').value;
+            const divResultado = document.getElementById('resultadoMensaje');
+
+            // Limpiamos las clases previas
+            divResultado.className = 'mensaje';
+
+            if (input.trim() === "") {
+                divResultado.textContent = "Por favor, ingrese un valor en el campo.";
+                divResultado.classList.add('error');
+                return;
+            }
+
+            // Patrón Regex para detectar posibles inyecciones SQL
+            // Detecta operadores (OR, AND), comandos DML/DDL (SELECT, DROP) y caracteres de escape (', ", ;)
+            const patronSQLi = /(\b(UNION|SELECT|INSERT|UPDATE|DELETE|DROP|ALTER|OR|AND)\b)|(--|\#|\/\*|;|\'|\")/i;
+
+            if (patronSQLi.test(input)) {
+                // Se detectó inyección
+                divResultado.textContent = "❌ ERROR: Se detectó contenido malicioso (Inyección SQL). Petición bloqueada.";
+                divResultado.classList.add('error');
+            } else {
+                // Contenido seguro
+                divResultado.textContent = "✔️ Sano: El contenido es seguro y puede procesarse.";
+                divResultado.classList.add('sano');
+            }
+        }
+    </script>
+
+</body>
+</html>
