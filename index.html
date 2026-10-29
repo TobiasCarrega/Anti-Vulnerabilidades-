@@ -124,11 +124,11 @@
 
             if (patronSQLi.test(input)) {
                 // Se detectó inyección
-                divResultado.textContent = "❌ ERROR: Se detectó contenido malicioso (Inyección SQL). Petición bloqueada.";
+                divResultado.textContent = "ERROR: Se detectó contenido malicioso (Inyección SQL). Petición bloqueada.";
                 divResultado.classList.add('error');
             } else {
                 // Contenido seguro
-                divResultado.textContent = "✔️ Sano: El contenido es seguro y puede procesarse.";
+                divResultado.textContent = "Sano: El contenido es seguro y puede procesarse.";
                 divResultado.classList.add('sano');
             }
         }
