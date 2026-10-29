@@ -90,14 +90,23 @@
         <p>Ingrese el parámetro a consultar en la base de datos:</p>
         
         <input type="text" id="campoEntrada" placeholder="Ej: juan@mail.com">
-        <button onclick="comprobarSeguridad()">Comprobar</button>
+        <button type="button" onclick="comprobarSeguridad()">Comprobar</button>
 
         <div id="resultadoMensaje" class="mensaje"></div>
     </div>
 
     <script>
+        const campoEntrada = document.getElementById('campoEntrada');
+
+        campoEntrada.addEventListener('keydown', function (event) {
+            if (event.key === 'Enter') {
+                event.preventDefault();
+                comprobarSeguridad();
+            }
+        });
+
         function comprobarSeguridad() {
-            const input = document.getElementById('campoEntrada').value;
+            const input = campoEntrada.value;
             const divResultado = document.getElementById('resultadoMensaje');
 
             // Limpiamos las clases previas
